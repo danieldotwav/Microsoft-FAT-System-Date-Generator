@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 const int MIN_MONTH = 1;
@@ -15,40 +16,42 @@ bool isValidMonth(int month);
 int getDaysInMonth(int month, int year);
 bool isValidDay(int day, int month, int year);
 
+void purgeInvalidInput(string error_mess);
+
 int main() {
 	int year, month, day;
 	char user_selection = 'Y';
-	int num_days;
+	bool is_valid_year, is_valid_month, is_valid_day;
 
 	while (user_selection == 'Y' || user_selection == 'y') {
-		cout << "Enter Year (1980 - 2107)\n>> ";
-		cin >> year;
+		cout << "Enter a month, day, and year between 1-1-1980 and 12-31-2107: ";
+		cin >> month >> day >> year;
 
-		// Get the year
-		if (isValidYear(year)) {
-			// Get the month
-			cout << "\nEnter Month (1 - 12)\n>>";
-			cin >> month;
-
-			if (isValidMonth(month)) {
-				// Get the day
-				cout << "Enter Day (1 - 31)\n>>";
-				cin >> day;
-
-				if (isValidDay(day, month, year)) {
-					// Once the date is fully validated, we can perform the conversion to store date using Microsoft FAT system date
-
-				}
-				else {
-					cout << "\nError: Invalid Day\n";
-				}
-			}
-			else {
-				cout << "\nError: Invalid Month\n";
-			}
+		// Check if the input operation failed and handle accordingly
+		if (!cin) {
+			purgeInvalidInput("\nError: Invalid Input\n");
 		}
 		else {
-			cout << "\nError: Invalid Year\n";
+			is_valid_year = isValidYear(year);
+			is_valid_month = isValidMonth(month);
+			is_valid_day = isValidDay(day, month, year);
+
+			if (is_valid_year && is_valid_month && is_valid_day) {
+				// Once the date is fully validated, we can perform the conversion to store date using Microsoft FAT system date
+				short int fatDate = ((year - MIN_YEAR) << 9) | (month << 5) | day;
+				cout << "The hexadecimal FAT date is: " << hex << uppercase << setfill('0') << setw(4) << fatDate << endl;
+			}
+			else {
+				if (!is_valid_month) {
+					cout << "\nError: Invalid Month\n";
+				}
+				if (!is_valid_day) {
+					cout << "\nError: Invalid Day\n";
+				}
+				if (!is_valid_year) {
+					cout << "\nError: Invalid Year\n";
+				}
+			}
 		}
 
 		cout << "\nWould you like to run the program again?\nEnter 'Y' for Yes, Enter 'N' to Exit\n>>";
@@ -130,4 +133,10 @@ int getDaysInMonth(int month, int year) {
 bool isValidDay(int day, int month, int year) {
 	int num_days_in_given_month = getDaysInMonth(month, year);
 	return (day >= MIN_DAY && day <= num_days_in_given_month);
+}
+
+void purgeInvalidInput(string error_mess) {
+	cout << error_mess << endl;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
