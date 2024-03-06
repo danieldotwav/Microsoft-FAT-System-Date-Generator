@@ -1,6 +1,5 @@
 #include <iostream>
 #include <iomanip>
-using namespace std;
 
 const int MIN_MONTH = 1;
 const int MAX_MONTH = 12;
@@ -21,18 +20,17 @@ bool isLeapYear(int year);
 bool isValidMonth(int month);
 int getDaysInMonth(int month, int year);
 bool isValidDay(int day, int month, int year);
-
-void purgeInvalidInput(string error_mess);
+void purgeInvalidInput(std::string error_mess);
 
 int main() {
 	int month, day, year;
 	bool is_valid_year, is_valid_month, is_valid_day;
 	
-	cout << "Enter a month, day, and year between 1-1-1980 and 12-31-2107: ";
-	cin >> month >> day >> year;
+	std::cout << "Enter a month, day, and year between 1-1-1980 and 12-31-2107: ";
+	std::cin >> month >> day >> year;
 
 	// Check if the input operation failed and handle accordingly
-	if (!cin) {
+	if (!std::cin) {
 		purgeInvalidInput("\nError: Invalid Input\n");
 	}
 	else {
@@ -41,25 +39,25 @@ int main() {
 		is_valid_day = isValidDay(day, month, year);
 
 		if (is_valid_year && is_valid_month && is_valid_day) {
-			// Once the date is fully validated, we can perform the conversion to store date using Microsoft FAT system date
+			// Bits 0-4: Day, Bits 5-8: Month, Bits 9-15: Year
 			short int fatDate = ((year - MIN_YEAR) << 9) | (month << 5) | day;
-			cout << "The hexadecimal FAT date is: " << hex << uppercase << setfill('0') << setw(WIDTH) << fatDate << endl;
+			std::cout << "The hexadecimal FAT date is: " << std::hex << std::uppercase << std::setfill('0') << std::setw(WIDTH) << fatDate << std::endl;
 		}
 		else {
 			if (!is_valid_month) {
-				cout << "\nError: Invalid Month";
+				std::cout << "\nError: Invalid Month";
 			}
 			if (!is_valid_day) {
-				cout << "\nError: Invalid Day";
+				std::cout << "\nError: Invalid Day";
 			}
 			if (!is_valid_year) {
-				cout << "\nError: Invalid Year";
+				std::cout << "\nError: Invalid Year";
 			}
-			cout << endl;
+			std::cout << std::endl;
 		}
 	}
 
-	cout << "\nTerminating Program...\n";
+	std::cout << "\nTerminating Program...\n";
 	return 0;
 }
 
@@ -68,7 +66,8 @@ bool isValidYear(int year) {
 }
 
 bool isLeapYear(int year) {
-	return year % 4 == 0;
+	// A year is a leap year if it is divisible by 4, but years divisible by 100 are not leap years unless they are also divisible by 400
+	return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
 }
 
 bool isValidMonth(int month) {
@@ -130,8 +129,8 @@ bool isValidDay(int day, int month, int year) {
 	return (day >= MIN_DAY && day <= num_days_in_given_month);
 }
 
-void purgeInvalidInput(string error_mess) {
-	cout << error_mess << endl;
-	cin.clear();
-	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+void purgeInvalidInput(std::string error_mess) {
+	std::cout << error_mess << std::endl;
+	std::cin.clear();
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
