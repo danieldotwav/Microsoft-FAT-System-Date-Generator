@@ -8,6 +8,13 @@ const int MIN_DAY = 1;
 const int MIN_YEAR = 1980;
 const int MAX_YEAR = 2107;
 const int INVALID = -1;
+const int WIDTH = 4;
+
+enum MONTH { 
+	JANUARY = 1, FEBRUARY, MARCH, APRIL, MAY, 
+	JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, 
+	DECEMBER
+};
 
 bool isValidYear(int year);
 bool isLeapYear(int year);
@@ -20,50 +27,36 @@ void purgeInvalidInput(string error_mess);
 int main() {
 	int month, day, year;
 	bool is_valid_year, is_valid_month, is_valid_day;
-	char user_selection = 'Y';
+	
+	cout << "Enter a month, day, and year between 1-1-1980 and 12-31-2107: ";
+	cin >> month >> day >> year;
 
-	while (user_selection == 'Y' || user_selection == 'y') {
-		cout << "Enter a month, day, and year between 1-1-1980 and 12-31-2107: ";
-		cin >> month >> day >> year;
+	// Check if the input operation failed and handle accordingly
+	if (!cin) {
+		purgeInvalidInput("\nError: Invalid Input\n");
+	}
+	else {
+		is_valid_year = isValidYear(year);
+		is_valid_month = isValidMonth(month);
+		is_valid_day = isValidDay(day, month, year);
 
-		// Check if the input operation failed and handle accordingly
-		if (!cin) {
-			purgeInvalidInput("\nError: Invalid Input\n");
+		if (is_valid_year && is_valid_month && is_valid_day) {
+			// Once the date is fully validated, we can perform the conversion to store date using Microsoft FAT system date
+			short int fatDate = ((year - MIN_YEAR) << 9) | (month << 5) | day;
+			cout << "The hexadecimal FAT date is: " << hex << uppercase << setfill('0') << setw(WIDTH) << fatDate << endl;
 		}
 		else {
-			is_valid_year = isValidYear(year);
-			is_valid_month = isValidMonth(month);
-			is_valid_day = isValidDay(day, month, year);
-
-			if (is_valid_year && is_valid_month && is_valid_day) {
-				// Once the date is fully validated, we can perform the conversion to store date using Microsoft FAT system date
-				short int fatDate = ((year - MIN_YEAR) << 9) | (month << 5) | day;
-				cout << "The hexadecimal FAT date is: " << hex << uppercase << setfill('0') << setw(4) << fatDate << endl;
+			if (!is_valid_month) {
+				cout << "\nError: Invalid Month";
 			}
-			else {
-				if (!is_valid_month) {
-					cout << "\nError: Invalid Month";
-				}
-				if (!is_valid_day) {
-					cout << "\nError: Invalid Day";
-				}
-				if (!is_valid_year) {
-					cout << "\nError: Invalid Year";
-				}
-				cout << endl;
+			if (!is_valid_day) {
+				cout << "\nError: Invalid Day";
 			}
+			if (!is_valid_year) {
+				cout << "\nError: Invalid Year";
+			}
+			cout << endl;
 		}
-
-		cout << "\nWould you like to run the program again?\nEnter 'Y' for Yes, Enter 'N' to Exit: ";
-		cin >> user_selection;
-
-		while (user_selection != 'Y' && user_selection != 'y' && user_selection != 'N' && user_selection != 'n') {
-			cout << "\nError: Invalid Selection\n";
-
-			cout << "\nWould you like to run the program again?\nEnter 'Y' for Yes, Enter 'N' to Exit: ";
-			cin >> user_selection;
-		}
-		cout << endl;
 	}
 
 	cout << "\nTerminating Program...\n";
@@ -85,10 +78,10 @@ bool isValidMonth(int month) {
 int getDaysInMonth(int month, int year) {
 	int days = 0;
 	switch (month) {
-		case 1:
+		case JANUARY:
 			days = 31;
 			break;
-		case 2:
+		case FEBRUARY:
 			if (isLeapYear(year)) {
 				days = 29;
 			}
@@ -96,34 +89,34 @@ int getDaysInMonth(int month, int year) {
 				days = 28;
 			}
 			break;
-		case 3:
+		case MARCH:
 			days = 31;
 			break;
-		case 4:
+		case APRIL:
 			days = 30;
 			break;
-		case 5:
+		case MAY:
 			days = 31;
 			break;
-		case 6:
+		case JUNE:
 			days = 30;
 			break;
-		case 7:
+		case JULY:
 			days = 31;
 			break;
-		case 8:
+		case AUGUST:
 			days = 31;
 			break;
-		case 9:
+		case SEPTEMBER:
 			days = 30;
 			break;
-		case 10:
+		case OCTOBER:
 			days = 31;
 			break;
-		case 11:
+		case NOVEMBER:
 			days = 30;
 			break;
-		case 12:
+		case DECEMBER:
 			days = 31;
 			break;
 		default:
