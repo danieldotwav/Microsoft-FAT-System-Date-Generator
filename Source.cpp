@@ -5,7 +5,6 @@ using namespace std;
 const int MIN_MONTH = 1;
 const int MAX_MONTH = 12;
 const int MIN_DAY = 1;
-const int MAX_DAY = 31;
 const int MIN_YEAR = 1980;
 const int MAX_YEAR = 2107;
 const int INVALID = -1;
@@ -19,9 +18,9 @@ bool isValidDay(int day, int month, int year);
 void purgeInvalidInput(string error_mess);
 
 int main() {
-	int year, month, day;
-	char user_selection = 'Y';
+	int month, day, year;
 	bool is_valid_year, is_valid_month, is_valid_day;
+	char user_selection = 'Y';
 
 	while (user_selection == 'Y' || user_selection == 'y') {
 		cout << "Enter a month, day, and year between 1-1-1980 and 12-31-2107: ";
@@ -43,27 +42,31 @@ int main() {
 			}
 			else {
 				if (!is_valid_month) {
-					cout << "\nError: Invalid Month\n";
+					cout << "\nError: Invalid Month";
 				}
 				if (!is_valid_day) {
-					cout << "\nError: Invalid Day\n";
+					cout << "\nError: Invalid Day";
 				}
 				if (!is_valid_year) {
-					cout << "\nError: Invalid Year\n";
+					cout << "\nError: Invalid Year";
 				}
+				cout << endl;
 			}
 		}
 
-		cout << "\nWould you like to run the program again?\nEnter 'Y' for Yes, Enter 'N' to Exit\n>>";
+		cout << "\nWould you like to run the program again?\nEnter 'Y' for Yes, Enter 'N' to Exit: ";
 		cin >> user_selection;
 
 		while (user_selection != 'Y' && user_selection != 'y' && user_selection != 'N' && user_selection != 'n') {
 			cout << "\nError: Invalid Selection\n";
 
-			cout << "\nWould you like to run the program again?\nEnter 'Y' for Yes, Enter 'N' to Exit\n>>";
+			cout << "\nWould you like to run the program again?\nEnter 'Y' for Yes, Enter 'N' to Exit: ";
 			cin >> user_selection;
 		}
+		cout << endl;
 	}
+
+	cout << "\nTerminating Program...\n";
 	return 0;
 }
 
@@ -76,7 +79,7 @@ bool isLeapYear(int year) {
 }
 
 bool isValidMonth(int month) {
-	return (month >= 1 && month <= 12);
+	return (month >= MIN_MONTH && month <= MAX_MONTH);
 }
 
 int getDaysInMonth(int month, int year) {
@@ -125,7 +128,6 @@ int getDaysInMonth(int month, int year) {
 			break;
 		default:
 			days = INVALID;
-			cout << "\nError: Unable To Determine Days In Specified Month/Year\n";
 	}
 	return days;
 }
