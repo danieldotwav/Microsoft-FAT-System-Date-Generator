@@ -31,7 +31,7 @@ int main() {
 
 	// Check if the input operation failed and handle accordingly
 	if (!std::cin) {
-		purgeInvalidInput("\nError: Invalid Input\n");
+		purgeInvalidInput("\nError: Invalid Input");
 	}
 	else {
 		is_valid_year = isValidYear(year);
